@@ -1,4 +1,6 @@
 require 'debugger'
+require 'yaml'
+
 class Board
   attr_reader :board, :size
   def initialize(opts = {})
@@ -129,7 +131,7 @@ class MinesweeperUI
   end
 
   def start_game
-    until @board.win? || @board.lose?
+    until @board.win? || @board.lose? || quit?
       do_turn
     end
     show_results
@@ -154,12 +156,30 @@ class MinesweeperUI
     if (coords2 * "").upcase.include? "S"
       save
       quit
+      return
     end
     if coords2[2].upcase == "F"
       @board[coords2[0].to_i, coords2[1].to_i].flag
     else
       @board[coords2[0].to_i, coords2[1].to_i].reveal
     end
+  end
+
+  def save
+    board_yaml = @board.to_yaml
+    print "Please enter a filename: "
+    filename = gets.chomp
+    File.open("#{filename}.yml", "w") do |f|
+      f.puts board_yaml
+    end
+  end
+
+  def quit
+    @quit = true
+  end
+
+  def quit?
+    @quit
   end
 end
 
