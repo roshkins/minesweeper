@@ -123,6 +123,17 @@ class MinesweeperUI
     end
     show_results
   end
+
+  def coords
+    print "Enter X, Y of spot to reveal: "
+    gets.chomp.split(",").map(&:strip).map(&:to_i)
+  end
+
+  def do_turn
+    puts board
+    coords = coords #I 'think' that works.
+    board[coords[0], coords[1]].reveal
+  end
 end
 
 if __FILE__ == $PROGRAM_NAME
