@@ -4,7 +4,7 @@ require 'yaml'
 class Board
   attr_reader :board, :size
   def initialize(opts = {})
-    opts   = opts.merge( {size: 9, mines: 10} )
+    opts   = {size: 9, mines: 10}.merge( opts )
     @size  = opts[:size]
     @mines = opts[:mines]
     @board = build_board(@size)
@@ -98,10 +98,10 @@ class Tile
     return true if @revealed
     @bomb_count = bomb_count
     @hint = @bomb_count > 0
-    @revealed = true unless (@flagged || @hint)
+    @revealed = true unless (@flagged)
 
     #recursion
-    adjacent_tiles.each { |tile| tile.reveal if @revealed }
+    adjacent_tiles.each { |tile| tile.reveal if @revealed && !@hint }
   end
 
   def bomb_count
@@ -203,6 +203,6 @@ if __FILE__ == $PROGRAM_NAME
  #  p board
   # p board[x, y].adjacent_tiles
 
-  game = MinesweeperUI.new
+  game = MinesweeperUI.new(9, 1)
 
 end
