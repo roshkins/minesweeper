@@ -3,12 +3,20 @@ require 'yaml'
 
 class Board
   attr_reader :board, :size
+  attr_accessor :start_time
+  attr_writer :total_time
   def initialize(opts = {})
     opts   = {size: 9, mines: 10}.merge( opts )
     @size  = opts[:size]
     @mines = opts[:mines]
     @board = build_board(@size)
+    @start_time = Time.new
+    @total_time = 0.0
     drop_bombs
+  end
+
+  def total_time
+
   end
 
   def [](col, row)
@@ -123,7 +131,7 @@ class Tile
 
 end
 
-class MinesweeperUI
+class MinesweeperGame
 
   def initialize(size = 9, mines = 10)
     @board = Board.new({size: size, mines: mines})
@@ -133,32 +141,31 @@ class MinesweeperUI
   def start_game
     print_highscores
     load_game
-    start_time = Time.new
     until @board.win? || @board.lose? || quit?
       do_turn
     end
-    end_time = Time.new
-    total_time = end_time - start_time
-    show_results(total_time)
+    show_results
   end
 
-  # def print_highscores
-  #   scores = JSON.parse(File.read("highscores.json"))
-  #   if scores.strip.empty?
-  #     puts
-  #   p scores
-  # end
+  def save
+    @board.total_time += Time.new - @board.start_time
+    board_yaml = @board.to_yaml
+    print "Please enter a filename: "
+    filename = gets.chomp
+    File.open("#{filename}.yml", "w") do |f|
+      f.puts board_yaml
+    end
+  end
 
   def load_game
     print "Please enter a filename to load a saved game or nothing to start a new game: "
     filename = gets.chomp
     @board = YAML.load(File.read(filename)) unless filename.empty?
+    @board.start_time = 0
   end
 
-  def
-
-  def show_results(total_time)
-    mins = total_time.to_f / 60.0
+  def show_results
+    mins = @board.total_time
     puts "That took #{mins} minutes.  What a shame."
     if @board.win?
       puts "You've redeemed yourself as a human being."
@@ -189,15 +196,6 @@ class MinesweeperUI
     end
   end
 
-  def save
-    board_yaml = @board.to_yaml
-    print "Please enter a filename: "
-    filename = gets.chomp
-    File.open("#{filename}.yml", "w") do |f|
-      f.puts board_yaml
-    end
-  end
-
   def quit
     @quit = true
   end
@@ -205,14 +203,6 @@ class MinesweeperUI
   def quit?
     @quit
   end
-end
-
-class Player
-  attr_accessor :time
-  def initialize(name)
-    @name = name
-  end
-
 end
 
 
@@ -227,6 +217,6 @@ if __FILE__ == $PROGRAM_NAME
  #  p board
   # p board[x, y].adjacent_tiles
 
-  game = MinesweeperUI.new(9, 1)
+  game = MinesweeperGame.new(9, 1)
 
 end
