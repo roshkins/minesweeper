@@ -19,11 +19,11 @@ class Board
 
   def build_board(size)
     board = []
-    size.times do
+    size.times do |y|
       line = []
       board << line
-      size.times do
-        line << Tile.new(false, self)
+      size.times do |x|
+        line << Tile.new(false, self, [x, y])
       end
     end
     board
@@ -35,11 +35,12 @@ class Tile
 
   attr_reader :revealed
 
-  def initialize(bomb, board)
+  def initialize(bomb, board, location)
     @bomb = bomb
     @board = board
     @revealed, @flagged = false, false
     @bomb_count = bomb_count
+    @location = location
   end
 
   def to_s
@@ -49,6 +50,15 @@ class Tile
 
   def bomb_count
     nil
+  end
+
+  def adjacent_tiles
+    adj_tiles = []
+    3.times do |x|
+      3.times do |y|
+        adj_tiles << @board[x-1, y-1]
+      end
+    end
   end
 
 end
