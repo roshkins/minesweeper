@@ -56,7 +56,7 @@ end
 class Tile
 
   attr_reader :revealed, :location
-  attr_accessor :bomb
+  attr_accessor :bomb, :flagged
 
   def initialize(board, location)
     @bomb = false
@@ -85,7 +85,7 @@ class Tile
     @revealed = true unless (@flagged || @hint)
 
     #recursion
-    adjacent_tiles.each { |tile| p tile; tile.reveal } if @revealed
+    adjacent_tiles.each { |tile| tile.reveal } if @revealed
   end
 
   def bomb_count
@@ -105,6 +105,16 @@ class Tile
     adj_tiles
   end
 
+end
+
+class MinesweeperUI
+  def start_game(size = 9, mines = 10)
+    board = Board.new({size: size, mines: mines})
+    until board.win? || board.lose?
+      do_turn
+    end
+    show_results
+  end
 end
 
 if __FILE__ == $PROGRAM_NAME
