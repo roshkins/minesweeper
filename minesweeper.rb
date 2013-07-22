@@ -69,7 +69,6 @@ class Tile
 
   def to_s
     # return "*" unless revealed
-    p 'in to_s' if @revealed
     return @bomb_count if @hint
     return "F" if @flagged
     return "B" if bomb #&& @revealed
@@ -80,11 +79,13 @@ class Tile
 
   def reveal
     # debugger
+    return true if @revealed
     @bomb_count = bomb_count
-    @revealed = true unless @flagged || @bomb_count > 0
     @hint = @bomb_count > 0
+    @revealed = true unless (@flagged || @hint)
+
     #recursion
-    adjacent_tiles.each { |tile| tile.reveal } if @revealed
+    adjacent_tiles.each { |tile| p tile; tile.reveal } if @revealed
   end
 
   def bomb_count
@@ -98,7 +99,7 @@ class Tile
         #subtract 1 because we want to change 0 to -1 etc.
         rel_x = @location[0] + x - 1
         rel_y = @location[1] + y - 1
-        adj_tiles << @board[rel_x, rel_y] if rel_x >= 0 && rel_y >= 0 && !([rel_x, rel_y] == @location) && rel_x < @board.size && rel_y < @board.size
+        adj_tiles << @board[rel_x, rel_y] if (rel_x >= 0) && (rel_y >= 0) && !([rel_x, rel_y] == @location) && (rel_x < @board.size) && (rel_y < @board.size)
       end
     end
     adj_tiles
@@ -109,11 +110,12 @@ end
 if __FILE__ == $PROGRAM_NAME
   board = Board.new
   puts board
-  x = 2
-  y = 1
-  board[x, y].reveal
-  puts
-  puts board
+  x = 8
+  y = 8
+  p board[x, y].reveal
+
+
+  p board
   # p board[x, y].adjacent_tiles
 
 
