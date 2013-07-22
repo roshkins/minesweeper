@@ -6,6 +6,7 @@ class Board
     @size  = opts[:size]
     @mines = opts[:mines]
     @board = build_board(@size)
+    drop_bombs
   end
 
   def [](col, row)
@@ -33,7 +34,6 @@ class Board
   end
 
   def drop_bombs
-    # debugger
     @mines.times do
       tile = nil
       loop do #something
@@ -55,14 +55,20 @@ class Tile
   def initialize(board, location)
     @bomb = false
     @board = board
-    @revealed, @flagged = false, false
+    @revealed, @flagged = nil, nil
     @location = location
+    @hint = nil
     # @bomb_count = bomb_count
   end
 
   def to_s
-    return "b" if bomb
     return "*" unless revealed
+    return bomb_count if @hint
+    return "F" if flagged
+    return "B" if revealed && bomb
+    return "_" if revealed
+
+
   end
 
 
@@ -87,11 +93,10 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   board = Board.new
-  # puts board
+  puts board
   x = 2
   y = 1
   # p board[x, y].adjacent_tiles
-  p board[8, 4]
-  board.drop_bombs
+
 
 end
