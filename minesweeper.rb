@@ -1,6 +1,6 @@
 class Board
 
-  def initialize(opts)
+  def initialize(opts = {})
     opts   = opts.merge( {size: 9, mines: 10} )
     @size  = opts[:size]
     @mines = opts[:mines]
@@ -8,8 +8,8 @@ class Board
   end
 
   def to_s
-    @board.each |line|
-      puts line.join
+    @board.each do |line|
+      puts line.join(" ")
     end
   end
 
@@ -29,7 +29,9 @@ end
 
 class Tile
 
-  def inititalize(bomb, board)
+  attr_reader :revealed
+
+  def initialize(bomb, board)
     @bomb = bomb
     @board = board
     @revealed, @flagged = false, false
@@ -37,11 +39,18 @@ class Tile
   end
 
   def to_s
-    return "*" unless revealed?
+    return "*" unless revealed
   end
+
 
   def bomb_count
     nil
   end
+
+end
+
+if __FILE__ == $PROGRAM_NAME
+  board = Board.new
+  puts board
 
 end
