@@ -144,13 +144,17 @@ class MinesweeperUI
   end
 
   def coords
-    print "Enter X, Y of spot and R or F to reveal or flag: "
+    print "Enter X, Y of spot and R or F to reveal or flag.\nAlternatively enter S to Save and Quit: "
     gets.chomp.split(",").map(&:strip)
   end
 
   def do_turn
     puts @board
     coords2 = coords
+    if (coords2 * "").upcase.include? "S"
+      save
+      quit
+    end
     if coords2[2].upcase == "F"
       @board[coords2[0].to_i, coords2[1].to_i].flag
     else
