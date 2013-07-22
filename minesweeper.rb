@@ -23,4 +23,15 @@ end
 
 class Tile
 
+  def inititalize(bomb, board)
+    @bomb = bomb
+    @board = board
+    @revealed, @flagged = false, false
+    @bomb_count = bomb_count
+  end
+
+  def bomb_count
+    nil
+  end
+
 end
