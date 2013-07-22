@@ -116,9 +116,14 @@ class Tile
 end
 
 class MinesweeperUI
-  def start_game(size = 9, mines = 10)
-    board = Board.new({size: size, mines: mines})
-    until board.win? || board.lose?
+
+  def initialize(size = 9, mines = 10)
+    @board = Board.new({size: size, mines: mines})
+    start_game
+  end
+
+  def start_game
+    until @board.win? || @board.lose?
       do_turn
     end
     show_results
@@ -130,22 +135,23 @@ class MinesweeperUI
   end
 
   def do_turn
-    puts board
-    coords = coords #I 'think' that works.
-    board[coords[0], coords[1]].reveal
+    puts @board
+    coords2 = coords #I 'think' that works.
+    @board[coords2[0], coords2[1]].reveal
   end
 end
 
 if __FILE__ == $PROGRAM_NAME
-  board = Board.new
-  puts board
-  x = 8
-  y = 8
-  p board[x, y].reveal
-
-
-  p board
+  # board = Board.new
+ #  puts board
+ #  x = 8
+ #  y = 8
+ #  p board[x, y].reveal
+ #
+ #
+ #  p board
   # p board[x, y].adjacent_tiles
 
+  game = MinesweeperUI.new
 
 end
