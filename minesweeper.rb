@@ -15,8 +15,10 @@ class Board
 
   def to_s
     final_str = ""
-    @board.each do |line|
-      final_str << "#{line.map(&:to_s).join(" ")}\n"
+    top_border = (0..(@size-1)).to_a * " "
+    final_str << "   | #{top_border}\n   | " + "--" * @size + "\n"
+    @board.each_with_index do |line, y|
+      final_str << " #{y} | #{line.map(&:to_s).join(" ")}\n"
     end
     final_str
   end
