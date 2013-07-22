@@ -7,13 +7,13 @@ class Board
     @board = self.build_board(@size)
   end
 
-  def self.build_board(size)
+  def build_board(size)
     board = []
     size.times do
       line = []
       board << line
       size.times do
-        line << nil
+        line << Tile.new(false, self)
       end
     end
     board
