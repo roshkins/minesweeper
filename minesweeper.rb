@@ -49,7 +49,7 @@ class Tile
 
 
   def bomb_count
-    nil
+    adjacent_tiles.select { |tile| tile.bomb }.length
   end
 
   def adjacent_tiles
