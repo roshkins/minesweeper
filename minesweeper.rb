@@ -132,10 +132,13 @@ class MinesweeperUI
 
   def start_game
     load_game
+    start_time = Time.new
     until @board.win? || @board.lose? || quit?
       do_turn
     end
-    show_results
+    end_time = Time.new
+    total_time = end_time - start_time
+    show_results(total_time)
   end
 
   def load_game
@@ -144,7 +147,9 @@ class MinesweeperUI
     @board = YAML.load(File.read(filename)) unless filename.empty?
   end
 
-  def show_results
+  def show_results(total_time)
+    mins = total_time.to_f / 60.0
+    puts "That took #{mins} minutes.  What a shame."
     if @board.win?
       puts "You've redeemed yourself as a human being."
     elsif @board.lose?
