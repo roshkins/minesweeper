@@ -131,6 +131,7 @@ class MinesweeperUI
   end
 
   def start_game
+    print_highscores
     load_game
     start_time = Time.new
     until @board.win? || @board.lose? || quit?
@@ -141,11 +142,20 @@ class MinesweeperUI
     show_results(total_time)
   end
 
+  # def print_highscores
+  #   scores = JSON.parse(File.read("highscores.json"))
+  #   if scores.strip.empty?
+  #     puts
+  #   p scores
+  # end
+
   def load_game
     print "Please enter a filename to load a saved game or nothing to start a new game: "
     filename = gets.chomp
     @board = YAML.load(File.read(filename)) unless filename.empty?
   end
+
+  def
 
   def show_results(total_time)
     mins = total_time.to_f / 60.0
@@ -196,6 +206,15 @@ class MinesweeperUI
     @quit
   end
 end
+
+class Player
+  attr_accessor :time
+  def initialize(name)
+    @name = name
+  end
+
+end
+
 
 if __FILE__ == $PROGRAM_NAME
   # board = Board.new
