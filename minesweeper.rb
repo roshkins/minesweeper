@@ -33,6 +33,14 @@ class Board
     board
   end
 
+  def win?
+    board.flatten.all? { |tile| tile.revealed || tile.bomb }
+  end
+
+  def lose?
+    board.flatten.any? { |tile| tile.revealed && tile.bomb }
+  end
+
   def drop_bombs
     @mines.times do
       tile = nil
