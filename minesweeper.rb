@@ -12,9 +12,11 @@ class Board
   end
 
   def to_s
+    final_str = ""
     @board.each do |line|
-      puts line.join(" ")
+      final_str << "#{line.join(" ")}\n"
     end
+    final_str
   end
 
   def build_board(size)
@@ -23,27 +25,40 @@ class Board
       line = []
       board << line
       size.times do |x|
-        line << Tile.new(false, self, [x, y])
+        line << Tile.new(self, [x, y])
       end
     end
     board
+  end
+
+  def drop_bombs
+    @mines.times do
+
+      loop do #something
+        tile = @board[rand(@size), rand(@size)]
+        break if !tile.bomb
+      end
+      tile.bomb = true
+    end
   end
 
 end
 
 class Tile
 
-  attr_reader :revealed
+  attr_reader :revealed, :location
+  attr_accessor :bomb
 
-  def initialize(bomb, board, location)
-    @bomb = bomb
+  def initialize(board, location)
+    @bomb = false
     @board = board
     @revealed, @flagged = false, false
-    @bomb_count = bomb_count
     @location = location
+    # @bomb_count = bomb_count
   end
 
   def to_s
+    return "b" if bomb
     return "*" unless revealed
   end
 
@@ -69,9 +84,10 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   board = Board.new
-  #p board
+  puts board
   x = 2
   y = 1
-  p board[x, y].adjacent_tiles
+  # p board[x, y].adjacent_tiles
+  p board[x, y].location
 
 end
