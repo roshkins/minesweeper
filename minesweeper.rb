@@ -7,6 +7,12 @@ class Board
     @board = self.build_board(@size)
   end
 
+  def to_s
+    @board.each |line|
+      puts line.join
+    end
+  end
+
   def build_board(size)
     board = []
     size.times do
@@ -28,6 +34,10 @@ class Tile
     @board = board
     @revealed, @flagged = false, false
     @bomb_count = bomb_count
+  end
+
+  def to_s
+    return "*" unless revealed?
   end
 
   def bomb_count
