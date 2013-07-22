@@ -85,6 +85,10 @@ class Tile
 
   end
 
+  def flag
+    @flagged = !@flagged
+  end
+
   def reveal
     # debugger
     return true if @revealed
@@ -93,7 +97,7 @@ class Tile
     @revealed = true unless (@flagged || @hint)
 
     #recursion
-    adjacent_tiles.each { |tile| tile.reveal } if @revealed
+    adjacent_tiles.each { |tile| tile.reveal if @revealed }
   end
 
   def bomb_count
@@ -129,15 +133,27 @@ class MinesweeperUI
     show_results
   end
 
+  def show_results
+    if @board.win?
+      puts "You've redeemed yourself as a human being."
+    else
+      puts "To the bowels of hell with you!"
+    end
+  end
+
   def coords
-    print "Enter X, Y of spot to reveal: "
-    gets.chomp.split(",").map(&:strip).map(&:to_i)
+    print "Enter X, Y of spot and R or F to reveal or flag: "
+    gets.chomp.split(",").map(&:strip)
   end
 
   def do_turn
     puts @board
-    coords2 = coords #I 'think' that works.
-    @board[coords2[0], coords2[1]].reveal
+    coords2 = coords
+    if coords2[2].upcase == "F"
+      @board[coords2[0].to_i, coords2[1].to_i].flag
+    else
+      @board[coords2[0].to_i, coords2[1].to_i].reveal
+    end
   end
 end
 
