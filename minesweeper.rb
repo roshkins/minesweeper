@@ -1,6 +1,6 @@
 require 'debugger'
 class Board
-  attr_reader :board
+  attr_reader :board, :size
   def initialize(opts = {})
     opts   = opts.merge( {size: 9, mines: 10} )
     @size  = opts[:size]
@@ -16,7 +16,7 @@ class Board
   def to_s
     final_str = ""
     @board.each do |line|
-      final_str << "#{line.join(" ")}\n"
+      final_str << "#{line.map(&:to_s).join(" ")}\n"
     end
     final_str
   end
@@ -36,11 +36,17 @@ class Board
   def drop_bombs
     @mines.times do
       tile = nil
-      loop do #something
+
+      begin
         coords = [rand(@size), rand(@size)]
         tile = self[coords[0],coords[1]]
-        break if !tile.bomb
-      end
+      end while tile.bomb
+
+      # loop do #something
+#         coords = [rand(@size), rand(@size)]
+#         tile = self[coords[0],coords[1]]
+#         break if !tile.bomb
+#       end
       tile.bomb = true
     end
   end
@@ -55,22 +61,31 @@ class Tile
   def initialize(board, location)
     @bomb = false
     @board = board
-    @revealed, @flagged = nil, nil
+    @revealed, @flagged = false, false
     @location = location
-    @hint = nil
-    # @bomb_count = bomb_count
+    @hint = false
+    #@bomb_count = bomb_count
   end
 
   def to_s
-    return "*" unless revealed
-    return bomb_count if @hint
-    return "F" if flagged
-    return "B" if revealed && bomb
-    return "_" if revealed
-
+    # return "*" unless revealed
+    p 'in to_s' if @revealed
+    return @bomb_count if @hint
+    return "F" if @flagged
+    return "B" if bomb #&& @revealed
+    return "_" if @revealed
+    return "*"
 
   end
 
+  def reveal
+    # debugger
+    @bomb_count = bomb_count
+    @revealed = true unless @flagged || @bomb_count > 0
+    @hint = @bomb_count > 0
+    #recursion
+    adjacent_tiles.each { |tile| tile.reveal } if @revealed
+  end
 
   def bomb_count
     adjacent_tiles.select { |tile| tile.bomb }.length
@@ -83,7 +98,7 @@ class Tile
         #subtract 1 because we want to change 0 to -1 etc.
         rel_x = @location[0] + x - 1
         rel_y = @location[1] + y - 1
-        adj_tiles << @board[rel_x, rel_y] if rel_x >= 0 && rel_y >= 0 && !([rel_x, rel_y] == @location)
+        adj_tiles << @board[rel_x, rel_y] if rel_x >= 0 && rel_y >= 0 && !([rel_x, rel_y] == @location) && rel_x < @board.size && rel_y < @board.size
       end
     end
     adj_tiles
@@ -96,6 +111,9 @@ if __FILE__ == $PROGRAM_NAME
   puts board
   x = 2
   y = 1
+  board[x, y].reveal
+  puts
+  puts board
   # p board[x, y].adjacent_tiles
 
 
