@@ -1,3 +1,4 @@
+require 'debugger'
 class Board
   attr_reader :board
   def initialize(opts = {})
@@ -32,10 +33,12 @@ class Board
   end
 
   def drop_bombs
+    # debugger
     @mines.times do
-
+      tile = nil
       loop do #something
-        tile = @board[rand(@size), rand(@size)]
+        coords = [rand(@size), rand(@size)]
+        tile = self[coords[0],coords[1]]
         break if !tile.bomb
       end
       tile.bomb = true
@@ -84,10 +87,11 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   board = Board.new
-  puts board
+  # puts board
   x = 2
   y = 1
   # p board[x, y].adjacent_tiles
-  p board[x, y].location
+  p board[8, 4]
+  board.drop_bombs
 
 end
