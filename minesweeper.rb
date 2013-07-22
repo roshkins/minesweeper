@@ -1,10 +1,10 @@
 class Board
-
+  attr_reader :board
   def initialize(opts = {})
     opts   = opts.merge( {size: 9, mines: 10} )
     @size  = opts[:size]
     @mines = opts[:mines]
-    @board = self.build_board(@size)
+    @board = build_board(@size)
   end
 
   def [](col, row)
@@ -56,15 +56,22 @@ class Tile
     adj_tiles = []
     3.times do |x|
       3.times do |y|
-        adj_tiles << @board[x-1, y-1]
+        #subtract 1 because we want to change 0 to -1 etc.
+        rel_x = @location[0] + x - 1
+        rel_y = @location[1] + y - 1
+        adj_tiles << @board[rel_x, rel_y] if rel_x >= 0 && rel_y >= 0 && !([rel_x, rel_y] == @location)
       end
     end
+    adj_tiles
   end
 
 end
 
 if __FILE__ == $PROGRAM_NAME
   board = Board.new
-  puts board
+  #p board
+  x = 2
+  y = 1
+  p board[x, y].adjacent_tiles
 
 end
