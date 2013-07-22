@@ -7,6 +7,10 @@ class Board
     @board = self.build_board(@size)
   end
 
+  def [](col, row)
+    @board[row][col]
+  end
+
   def to_s
     @board.each do |line|
       puts line.join(" ")
