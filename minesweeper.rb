@@ -131,17 +131,26 @@ class MinesweeperUI
   end
 
   def start_game
+    load_game
     until @board.win? || @board.lose? || quit?
       do_turn
     end
     show_results
   end
 
+  def load_game
+    print "Please enter a filename to load a saved game or nothing to start a new game: "
+    filename = gets.chomp
+    @board = YAML.load(File.read(filename)) unless filename.empty?
+  end
+
   def show_results
     if @board.win?
       puts "You've redeemed yourself as a human being."
-    else
+    elsif @board.lose?
       puts "To the bowels of hell with you!"
+    else
+      puts "Goodbye. I will judge you later."
     end
   end
 
