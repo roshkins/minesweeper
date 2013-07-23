@@ -136,15 +136,26 @@ class Tile
 
 end
 
+class Scoreboard
+  def initialize(filename)
+
+  end
+
+  def to_s
+    "This is a scoreboard."
+  end
+end
+
 class MinesweeperGame
 
   def initialize(size = 9, mines = 10)
     @board = Board.new({size: size, mines: mines})
+    @scoreboard = Scoreboard.new("scoreboard.json")
     start_game
   end
 
   def start_game
-    #print_highscores
+    puts @scoreboard
     load_game
     until @board.win? || @board.lose? || quit?
       do_turn
