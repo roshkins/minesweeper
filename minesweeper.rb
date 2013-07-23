@@ -149,16 +149,20 @@ class Scoreboard
 
   def add(name, time)
     @scores << {"name" => name, "time" => time}
+    save
+  end
+
+  def sort_scores
+    @scores.sort do |score1, score2|
+         score1["time"] <=> score2["time"]
+    end
   end
 
   def to_s
     score_str = ""
     score_str << "****HIGH SCORES****\n"
     score_str << "** NAME *** TIME **\n"
-    sorted = @scores.sort do |score1, score2|
-      score1["time"] <=> score2["time"]
-    end
-    sorted.each do |score|
+    @scores.each do |score|
       time = (score['time'] * 1000).floor / 1000.0
       score_str << "* #{score['name']} * #{time} *\n"
     end
@@ -166,8 +170,9 @@ class Scoreboard
   end
 
   def save
+    sorted = sort_scores[0..9]
     File.open(@filename, "w") do |f|
-      f.puts @scores.to_json
+      f.puts sorted.to_json
     end
   end
 end
