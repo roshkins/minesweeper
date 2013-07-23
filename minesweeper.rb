@@ -141,14 +141,16 @@ class Scoreboard
     if File.exists?(filename)
       @scores = JSON.parse(File.read(filename))
     else
-      File.open(filename, "w") { }
+      File.open(filename, "w") { |f| f.puts [].to_json }
       @scores = []
     end
     @filename = filename
   end
+
   def add(name, time)
     @scores << {name => time}
   end
+
   def to_s
     p @scores
     "This is a scoreboard."
@@ -254,5 +256,6 @@ if __FILE__ == $PROGRAM_NAME
   puts scoreboard
   scoreboard.add("Rashi", "-14 seconds")
   puts scoreboard
+  scoreboard.save
 
 end
