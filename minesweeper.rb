@@ -201,12 +201,16 @@ class MinesweeperGame
     mins = @board.total_time / 60
     puts "That took #{mins} minutes.  What a shame."
     if @board.win?
-      puts "You've redeemed yourself as a human being."
+      print "What's your name?: "
+      name = gets.chomp
+      @scoreboard.add(name, mins)
+      puts "#{name}, you've redeemed yourself as a human being."
     elsif @board.lose?
       puts "To the bowels of hell with you!"
     else
       puts "Goodbye. I will judge you later."
     end
+    puts @scoreboard
   end
 
   def coords
@@ -250,12 +254,12 @@ if __FILE__ == $PROGRAM_NAME
  #  p board
   # p board[x, y].adjacent_tiles
 
-  #game = MinesweeperGame.new(9, 1)
+  game = MinesweeperGame.new(9, 1)
 
-  scoreboard = Scoreboard.new("test_scores.json")
-  puts scoreboard
-  scoreboard.add("Rashi", "-14 seconds")
-  puts scoreboard
-  scoreboard.save
+  # scoreboard = Scoreboard.new("test_scores.json")
+  # puts scoreboard
+  # scoreboard.add("Rashi", "-14 seconds")
+  # puts scoreboard
+  # scoreboard.save
 
 end
