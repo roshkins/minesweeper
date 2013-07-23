@@ -16,7 +16,12 @@ class Board
   end
 
   def total_time
-
+    #update total_time
+    time_now = Time.new
+    @total_time += time_now - @start_time
+    @start_time = time_now
+    #return total_time
+    @total_time
   end
 
   def [](col, row)
@@ -139,7 +144,7 @@ class MinesweeperGame
   end
 
   def start_game
-    print_highscores
+    #print_highscores
     load_game
     until @board.win? || @board.lose? || quit?
       do_turn
@@ -148,7 +153,7 @@ class MinesweeperGame
   end
 
   def save
-    @board.total_time += Time.new - @board.start_time
+    @board.total_time
     board_yaml = @board.to_yaml
     print "Please enter a filename: "
     filename = gets.chomp
@@ -161,11 +166,11 @@ class MinesweeperGame
     print "Please enter a filename to load a saved game or nothing to start a new game: "
     filename = gets.chomp
     @board = YAML.load(File.read(filename)) unless filename.empty?
-    @board.start_time = 0
+    @board.start_time = Time.new
   end
 
   def show_results
-    mins = @board.total_time
+    mins = @board.total_time / 60
     puts "That took #{mins} minutes.  What a shame."
     if @board.win?
       puts "You've redeemed yourself as a human being."
