@@ -1,6 +1,6 @@
 require 'debugger'
 require 'yaml'
-
+require 'json'
 class Board
   attr_reader :board, :size
   attr_accessor :start_time
@@ -138,11 +138,26 @@ end
 
 class Scoreboard
   def initialize(filename)
-
+    if File.exists?(filename)
+      @scores = JSON.parse(File.read(filename))
+    else
+      File.open(filename, "w") { }
+      @scores = []
+    end
+    @filename = filename
+  end
+  def add(name, time)
+    @scores << {name => time}
+  end
+  def to_s
+    p @scores
+    "This is a scoreboard."
   end
 
-  def to_s
-    "This is a scoreboard."
+  def save
+    File.open(@filename, "w") do |f|
+      f.puts @scores.to_json
+    end
   end
 end
 
@@ -233,6 +248,11 @@ if __FILE__ == $PROGRAM_NAME
  #  p board
   # p board[x, y].adjacent_tiles
 
-  game = MinesweeperGame.new(9, 1)
+  #game = MinesweeperGame.new(9, 1)
+
+  scoreboard = Scoreboard.new("test_scores.json")
+  puts scoreboard
+  scoreboard.add("Rashi", "-14 seconds")
+  puts scoreboard
 
 end
