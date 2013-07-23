@@ -153,7 +153,7 @@ class MinesweeperUI
     if @board.win?
       puts "You've redeemed yourself as a human being."
     elsif @board.lose?
-      puts "To the bowels of hell with you!"
+      puts "To the gallows of hell with you!"
     else
       puts "Goodbye. I will judge you later."
     end
