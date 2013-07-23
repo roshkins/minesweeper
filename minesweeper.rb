@@ -93,10 +93,10 @@ class Tile
   end
 
   def to_s
-    # return "*" unless revealed
+    return "*" unless revealed
     return @bomb_count if @hint
     return "F" if @flagged
-    return "B" if bomb #&& @revealed
+    return "B" if bomb && @revealed
     return "_" if @revealed
     return "*"
 
@@ -269,7 +269,7 @@ if __FILE__ == $PROGRAM_NAME
  #  p board
   # p board[x, y].adjacent_tiles
 
-  game = MinesweeperGame.new(9, 1)
+  game = MinesweeperGame.new(9, 10)
 
   # scoreboard = Scoreboard.new("test_scores.json")
   # puts scoreboard
