@@ -148,12 +148,21 @@ class Scoreboard
   end
 
   def add(name, time)
-    @scores << {name => time}
+    @scores << {"name" => name, "time" => time}
   end
 
   def to_s
-    p @scores
-    "This is a scoreboard."
+    score_str = ""
+    score_str << "****HIGH SCORES****\n"
+    score_str << "** NAME *** TIME **\n"
+    sorted = @scores.sort do |score1, score2|
+      score1["time"] <=> score2["time"]
+    end
+    sorted.each do |score|
+      time = (score['time'] * 1000).floor / 1000.0
+      score_str << "* #{score['name']} * #{time} *\n"
+    end
+    score_str
   end
 
   def save
@@ -204,6 +213,7 @@ class MinesweeperGame
       print "What's your name?: "
       name = gets.chomp
       @scoreboard.add(name, mins)
+      @scoreboard.save
       puts "#{name}, you've redeemed yourself as a human being."
     elsif @board.lose?
       puts "To the bowels of hell with you!"
